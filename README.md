@@ -6,7 +6,12 @@ More information about LightningChart<sup>&#174;</sup> JS can be found from our 
 ## Getting Started
 This project can be opened with code editor like [Visual Studio][1] with the html file. For further details and download links, please refer to the *Get Started* guide for ElectronJS [here][2]!
 
-To run this project, run this project using visual studio code terminal
+To run this project, first install necessary dependencies
+```
+npm install
+```
+
+Then run this project using visual studio code terminal
 ```
 npm start
 ```
