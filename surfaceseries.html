@@ -1,23 +1,28 @@
 <html>
-    <body>
-        <h2 id="javascript-3d-simple-surface-grid">JavaScript 3D Simple Surface Grid</h2>
-<p>This example shows an animated 3D grid surface with various different dynamic styles selectable from the User Interface.</p>
-<p>The Chart is rendered using <strong> SurfaceGridSeries3D</strong>, a series type that renders a grid of XZ coordinates with varying Y and Color values.</p>
-<h3 id="surfacegridseries3d-data-format">SurfaceGridSeries3D Data Format</h3>
-<p> <strong> SurfaceGridSeries3D </strong> stores 3 kinds of user modifiable data.
-Each type of data has its own invalidation method. All these methods can be called either with:</p>
-<ul>
-<li><p>callback function.</p>
-<p>Called back for each XZ coordinate of the grid.
-Function then returns the value to be associated with the XZ coordinate.</p>
-</li>
-</ul>
-<ul>
-<li>data matrix</li>
-</ul>
-<p>Multidimensional array of data values.</p>
-<p>It is also possible to not invalidate the whole grid, but only a section of it. This is done by appending a second parameter, which specifies the range of modification <strong>(GridRangeOptions)</strong>.</p>
-<pre><code><span class="hljs-comment">// Invalidate first row of Colors by callback.</span>
+
+<body>
+    <h2 id="javascript-3d-simple-surface-grid">JavaScript 3D Simple Surface Grid</h2>
+    <p>This example shows an animated 3D grid surface with various different dynamic styles selectable from the User
+        Interface.</p>
+    <p>The Chart is rendered using <strong> SurfaceGridSeries3D</strong>, a series type that renders a grid of XZ
+        coordinates with varying Y and Color values.</p>
+    <h3 id="surfacegridseries3d-data-format">SurfaceGridSeries3D Data Format</h3>
+    <p> <strong> SurfaceGridSeries3D </strong> stores 3 kinds of user modifiable data.
+        Each type of data has its own invalidation method. All these methods can be called either with:</p>
+    <ul>
+        <li>
+            <p>callback function.</p>
+            <p>Called back for each XZ coordinate of the grid.
+                Function then returns the value to be associated with the XZ coordinate.</p>
+        </li>
+    </ul>
+    <ul>
+        <li>data matrix</li>
+    </ul>
+    <p>Multidimensional array of data values.</p>
+    <p>It is also possible to not invalidate the whole grid, but only a section of it. This is done by appending a
+        second parameter, which specifies the range of modification <strong>(GridRangeOptions)</strong>.</p>
+    <pre><code><span class="hljs-comment">// Invalidate first row of Colors by callback.</span>
 <span class="hljs-selector-tag">SurfaceGridSeries3D</span><span class="hljs-selector-class">.invalidateColorsOnly</span>(
     ( row, column, prev ) =&gt; new ColorHSV( column * <span class="hljs-number">10</span> ),
     {
@@ -25,19 +30,22 @@ Function then returns the value to be associated with the XZ coordinate.</p>
         <span class="hljs-attribute">column</span>: { <span class="hljs-attribute">start</span>: <span class="hljs-number">0</span>, <span class="hljs-attribute">end</span>: numberOfColumns }
     }
 )
-</code></pre><h3 id="height-map">Height Map</h3>
-<p>Each XZ coordinate on the grid is associated with a Y coordinate (Number).</p>
-<p>Y coordinates are invalidated with SurfaceGridSeries3D.invalidateYOnly</p>
-<pre><code><span class="hljs-comment">// Invalidate full grids Y coordinates by callback.</span>
+</code></pre>
+    <h3 id="height-map">Height Map</h3>
+    <p>Each XZ coordinate on the grid is associated with a Y coordinate (Number).</p>
+    <p>Y coordinates are invalidated with SurfaceGridSeries3D.invalidateYOnly</p>
+    <pre><code><span class="hljs-comment">// Invalidate full grids Y coordinates by callback.</span>
 SurfaceGridSeries3D.invalidateYOnly(
     <span class="hljs-function">(<span class="hljs-params"> row, column </span>) =&gt;</span> <span class="hljs-built_in">Math</span>.sin( row / <span class="hljs-number">10</span> ) * <span class="hljs-built_in">Math</span>.cos( column / <span class="hljs-number">5</span> )
 )
-</code></pre><h3 id="look-up-value-map">Look-Up-Value Map</h3>
-<p>Each XZ coordinate on the grid can be associated with a numeric look-up value (Number).</p>
-<p>This can be used to dynamically color each grid coordinate based on an attached Color look-up table (LUT).
-Note that coloring by the look-up values needs to be enabled by setting the Series&#39; FillStyle as PalettedFill.</p>
-<p>Look-Up-Values are invalidated with <strong>SurfaceGridSeries3D.invalidateValuesOnly</strong></p>
-<pre><code><span class="hljs-comment">// Define Color Look-Up-Table.</span>
+</code></pre>
+    <h3 id="look-up-value-map">Look-Up-Value Map</h3>
+    <p>Each XZ coordinate on the grid can be associated with a numeric look-up value (Number).</p>
+    <p>This can be used to dynamically color each grid coordinate based on an attached Color look-up table (LUT).
+        Note that coloring by the look-up values needs to be enabled by setting the Series&#39; FillStyle as
+        PalettedFill.</p>
+    <p>Look-Up-Values are invalidated with <strong>SurfaceGridSeries3D.invalidateValuesOnly</strong></p>
+    <pre><code><span class="hljs-comment">// Define Color Look-Up-Table.</span>
 const lut = <span class="hljs-keyword">new</span> LUT( {
 <span class="hljs-symbol">    steps:</span> [
         { <span class="hljs-string">value:</span> <span class="hljs-number">0</span>, <span class="hljs-string">color:</span> ColorRGBA( <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span> ) },
@@ -62,12 +70,14 @@ SurfaceGridSeries3D.invalidateValuesOnly(
 
 <span class="hljs-comment">// Configure Series fill style as look up from table.</span>
 SurfaceGridSeries3D.setFillStyle( <span class="hljs-keyword">new</span> PalettedFill({ lut }) )
-</code></pre><h3 id="color-map">Color Map</h3>
-<p>Each XZ coordinate on the grid can be associated with a Color.</p>
-<p>This can be used to color each grid coordinate with its own Color.
-Note that coloring by the individual Colors needs to be enabled by setting the Series&#39; FillStyle as IndividualPointFill.</p>
-<p>Color values are invalidated with SurfaceGridSeries3D.invalidateColorsOnly</p>
-<pre><code>// Invalidate first row of Colors by callback.
+</code></pre>
+    <h3 id="color-map">Color Map</h3>
+    <p>Each XZ coordinate on the grid can be associated with a Color.</p>
+    <p>This can be used to color each grid coordinate with its own Color.
+        Note that coloring by the individual Colors needs to be enabled by setting the Series&#39; FillStyle as
+        IndividualPointFill.</p>
+    <p>Color values are invalidated with SurfaceGridSeries3D.invalidateColorsOnly</p>
+    <pre><code>// Invalidate first row of Colors by callback.
 SurfaceGridSeries3D.invalidateColorsOnly(
     ( row, column, prev ) =&gt;<span class="hljs-built_in"> new </span>ColorHSV( column * 10 ),
     {
@@ -79,5 +89,6 @@ SurfaceGridSeries3D.invalidateColorsOnly(
 // Configure Series<span class="hljs-built_in"> fill </span>style as individual colors.
 SurfaceGridSeries3D.setFillStyle(<span class="hljs-built_in"> new </span>IndividualPointFill() )
 </code></pre>
-    </body>
+</body>
+
 </html>

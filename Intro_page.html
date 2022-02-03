@@ -1,33 +1,49 @@
 <html>
+
 <body>
-    <h1 id="using-lightningchart-sup-174-sup-js-with-xamarin-form">Using LightningChart<sup>&#174; </sup> JS with ElectronJS</h1>
-<p>This repository showcases the usage of LightningChart<sup>&#174;</sup> JS charting tools within a <a href="https://www.electronjs.org/docs/latest/">ElectronJS</a> .</p>
-<p>More information about LightningChart<sup>&#174;</sup> JS can be found from our website, <a href="https://www.arction.com/lightningchart-js/">https://www.arction.com/lightningchart-js/</a></p>
-<h2 id="getting-started">Getting Started</h2>
-<p>This project can be opened with code editor like <a href="https://visualstudio.microsoft.com/">Visual Studio</a> with the html file. For further details and download links, please refer to the <em>Get Started</em> guide for ElectronJS <a href="https://www.electronjs.org/docs/latest/tutorial/quick-start">here</a>!</p>
-<p>To run this project, run this project using visual studio code terminal</p>
-<pre><code><span class="hljs-built_in">npm</span> start
-</code></pre><h2 id="sending-data-from-your-javascript-code-to-lightningchart-sup-174-sup-js">Sending Data from your javascript Code to LightningChart<sup>&#174; </sup> JS</h2>
-<p>In order to send data to LightningChart®  JS , by creating javascript function json data will be passed to javascript in order to run line series using evaluatejavascript function.</p>
-<pre><code>// <span class="hljs-type">Using</span> <span class="hljs-type">Evaluate</span> function sent json <span class="hljs-class"><span class="hljs-keyword">data</span> to javascript for line series.</span>
+    <h1 id="using-lightningchart-sup-174-sup-js-with-xamarin-form">Using LightningChart<sup>&#174; </sup> JS with
+        ElectronJS</h1>
+    <p>This repository showcases the usage of LightningChart<sup>&#174;</sup> JS charting tools within a <a
+            href="https://www.electronjs.org/docs/latest/">ElectronJS</a> .</p>
+    <p>More information about LightningChart<sup>&#174;</sup> JS can be found from our website, <a
+            href="https://www.arction.com/lightningchart-js/">https://www.arction.com/lightningchart-js/</a></p>
+    <h2 id="getting-started">Getting Started</h2>
+    <p>This project can be opened with code editor like <a href="https://visualstudio.microsoft.com/">Visual Studio</a>
+        with the html file. For further details and download links, please refer to the <em>Get Started</em> guide for
+        ElectronJS <a href="https://www.electronjs.org/docs/latest/tutorial/quick-start">here</a>!</p>
+    <p>To run this project, run this project using visual studio code terminal</p>
+    <pre><code><span class="hljs-built_in">npm</span> start
+</code></pre>
+    <h2 id="sending-data-from-your-javascript-code-to-lightningchart-sup-174-sup-js">Sending Data from your javascript
+        Code to LightningChart<sup>&#174; </sup> JS</h2>
+    <p>In order to send data to LightningChart® JS , by creating javascript function json data will be passed to
+        javascript in order to run line series using evaluatejavascript function.</p>
+    <pre><code>// <span class="hljs-type">Using</span> <span class="hljs-type">Evaluate</span> function sent json <span class="hljs-class"><span class="hljs-keyword">data</span> to javascript for line series.</span>
       json = '[{ <span class="hljs-string">"X"</span>: <span class="hljs-number">0</span>, <span class="hljs-string">"Y"</span>: <span class="hljs-number">0</span> },{ <span class="hljs-string">"X"</span>: <span class="hljs-number">1</span>, <span class="hljs-string">"Y"</span>: <span class="hljs-number">8</span> },{ <span class="hljs-string">"X"</span>: <span class="hljs-number">2</span>, <span class="hljs-string">"Y"</span>: <span class="hljs-number">12</span> },{ <span class="hljs-string">"X"</span>: <span class="hljs-number">3</span>, <span class="hljs-string">"Y"</span>: <span class="hljs-number">18</span> },{ <span class="hljs-string">"X"</span>: <span class="hljs-number">4</span>, <span class="hljs-string">"Y"</span>: <span class="hljs-number">22</span> },{ <span class="hljs-string">"X"</span>: <span class="hljs-number">5</span>, <span class="hljs-string">"Y"</span>: <span class="hljs-number">32</span> },]';
       const <span class="hljs-type">JsonData</span> = eval(json);
       window.<span class="hljs-class"><span class="hljs-keyword">data</span>  = <span class="hljs-type">JsonData</span>;</span>
       <span class="hljs-type">Lineseries</span>(<span class="hljs-class"><span class="hljs-keyword">data</span>);</span>
-</code></pre><pre><code> <span class="hljs-keyword">OR</span>
-</code></pre><p>fetch data from json file and send to the javascript file </p>
-<pre><code><span class="hljs-comment">// using getJson fetch data from json file</span>
+</code></pre>
+    <pre><code> <span class="hljs-keyword">OR</span>
+</code></pre>
+    <p>fetch data from json file and send to the javascript file </p>
+    <pre><code><span class="hljs-comment">// using getJson fetch data from json file</span>
     $.getJSON(<span class="hljs-string">"data.json"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">json</span>) </span>{
        <span class="hljs-built_in">window</span>.scope = json;
     });
     Line_series(scope);
-</code></pre><h2 id="support">Support</h2>
-<p>If you notice an error in the example code, please open an issue on <a href="https://github.com/Arction/lcjs-html-example/issues">GitHub</a>.
-Official <a href="https://www.arction.com/lightningchart-js-api-documentation">API documentation</a> can be found on <a href="https://www.arction.com">Arction</a> website.
-If the docs and other materials do not solve your problem as well as implementation help is needed, ask on <a href="https://stackoverflow.com/questions/tagged/lightningchart">StackOverflow</a> (tagged lightningchart).
-If you think you found a bug in the LightningChart JavaScript library, please contact support@arction.com.
-Direct developer email support can be purchased through a <a href="https://www.arction.com/support-services/">Support Plan</a> or by contacting sales@arction.com.</p>
-<p>© Arction Ltd 2009-2020. All rights reserved.</p>
+</code></pre>
+    <h2 id="support">Support</h2>
+    <p>If you notice an error in the example code, please open an issue on <a
+            href="https://github.com/Arction/lcjs-html-example/issues">GitHub</a>.
+        Official <a href="https://www.arction.com/lightningchart-js-api-documentation">API documentation</a> can be
+        found on <a href="https://www.arction.com">Arction</a> website.
+        If the docs and other materials do not solve your problem as well as implementation help is needed, ask on <a
+            href="https://stackoverflow.com/questions/tagged/lightningchart">StackOverflow</a> (tagged lightningchart).
+        If you think you found a bug in the LightningChart JavaScript library, please contact support@arction.com.
+        Direct developer email support can be purchased through a <a
+            href="https://www.arction.com/support-services/">Support Plan</a> or by contacting sales@arction.com.</p>
+    <p>© Arction Ltd 2009-2020. All rights reserved.</p>
 
 </body>
 

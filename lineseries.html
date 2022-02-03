@@ -1,15 +1,27 @@
 <html>
-    <body>
-        <h2>JavaScript Chart With DateTime Axis</h2>
-        <p>This example shows creation of a DateTime Axis, for rendering XY-series where either/both of X/Y dimensions can present time. This doesn&#39;t affect the input of data - format remains as {x: number, y: number} - however, DateTime-axes format their values from number to a date and time. This affects axis labels, markers and cursors.</p>
-<p>A DateTime-Axis is created by specifying its TickStrategy. Here&#39;s how it looks when setting the Axis TickStrategy:</p>
-<pre><code><span class="hljs-comment">// Add an XY Chart</span>
+
+<body>
+    <h2>JavaScript Chart With DateTime Axis</h2>
+    <p>This example shows creation of a DateTime Axis, for rendering XY-series where either/both of X/Y dimensions can
+        present time. This doesn&#39;t affect the input of data - format remains as {x: number, y: number} - however,
+        DateTime-axes format their values from number to a date and time. This affects axis labels, markers and cursors.
+    </p>
+    <p>A DateTime-Axis is created by specifying its TickStrategy. Here&#39;s how it looks when setting the Axis
+        TickStrategy:</p>
+    <pre><code><span class="hljs-comment">// Add an XY Chart</span>
 <span class="hljs-keyword">const</span> chart = lightningChart().ChartXY({})
 <span class="hljs-comment">// Set the TickStrategy of the default X Axis to a DateTime TickStrategy</span>
 chart.getDefaultAxisX().setTickStrategy( AxisTickStrategies.<span class="hljs-built_in">DateTime</span> )
-</code></pre><p>The above mentioned examples will provide an Axis that will format its scale values to their DateTime-representations. This conversion relies on a reference date, further referred to as origin-date. This origin-date specifies the DateTime value that is equal to zero as a numeric representation. Incremental values will result in progressive DateTimes by milliseconds. For example, given origin-date is equal to the 1st of January 2002, 2PM, a numeric value of 7,200,000 would be translated to <strong> 1st of January 2002 4PM </strong>.</p>
-<p>Translating this to how we can modify the origin date in our Axis, we can do this by adding a mutator to the setTickStrategy() method to modify the origin date:</p>
-<pre><code><span class="hljs-comment">// Define the origin-date. (y, m [0-11], d [1-31], h [0-23])</span>
+</code></pre>
+    <p>The above mentioned examples will provide an Axis that will format its scale values to their
+        DateTime-representations. This conversion relies on a reference date, further referred to as origin-date. This
+        origin-date specifies the DateTime value that is equal to zero as a numeric representation. Incremental values
+        will result in progressive DateTimes by milliseconds. For example, given origin-date is equal to the 1st of
+        January 2002, 2PM, a numeric value of 7,200,000 would be translated to <strong> 1st of January 2002 4PM
+        </strong>.</p>
+    <p>Translating this to how we can modify the origin date in our Axis, we can do this by adding a mutator to the
+        setTickStrategy() method to modify the origin date:</p>
+    <pre><code><span class="hljs-comment">// Define the origin-date. (y, m [0-11], d [1-31], h [0-23])</span>
 <span class="hljs-keyword">const</span> originDate = <span class="hljs-keyword">new</span> Date(<span class="hljs-number">2002</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">13</span>)
 <span class="hljs-comment">// Create DateTime AxisTickStrategy with specified originDate.</span>
 chart.getDefaultAxisX()
@@ -18,8 +30,13 @@ chart.getDefaultAxisX()
         <span class="hljs-comment">// Use a mutator to set the origin date for this Axis' TickStrategy</span>
         (tickStrategy) =&gt; tickStrategy.setDateOrigin(originDate)
     )
-</code></pre><p>If this TickStrategy would be supplied to an X-Axis, it would effectively mean that its scale would start from 1st of January 2002 14PM, so a XY-point with coordinates <strong>{ x: 0, y: 0 }</strong> would be formated as <strong>{ x: &quot;1.1.2002 14:00&quot;, y: 0 }</strong>.</p>
-<p>It is worth mentioning that big DateTime-intervals can produce severe precision problems (eq. when zooming in). The only way to battle this is by reducing the distance of timestamps from the active origin-date.</p>
+</code></pre>
+    <p>If this TickStrategy would be supplied to an X-Axis, it would effectively mean that its scale would start from
+        1st of January 2002 14PM, so a XY-point with coordinates <strong>{ x: 0, y: 0 }</strong> would be formated as
+        <strong>{ x: &quot;1.1.2002 14:00&quot;, y: 0 }</strong>.</p>
+    <p>It is worth mentioning that big DateTime-intervals can produce severe precision problems (eq. when zooming in).
+        The only way to battle this is by reducing the distance of timestamps from the active origin-date.</p>
 
-    </body>
+</body>
+
 </html>
