@@ -37,6 +37,6 @@ function Line_series(json) {
 function LineSeries() {
   $.getJSON("data.json", function (json) {
     window.scope = json;
+    Line_series(scope);
   });
-  Line_series(scope);
 }

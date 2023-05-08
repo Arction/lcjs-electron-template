@@ -53,12 +53,14 @@ function Heatmapseries() {
     .setTitle("Time")
     // Setup progressive scrolling Axis.
     .setScrollStrategy(AxisScrollStrategies.progressive)
-    .setInterval(-10001, 0)
+    .setInterval({ start: -10001, end: 0, stopAxisAfter: false })
     .setTickStrategy(AxisTickStrategies.Time);
-  chart
-    .getDefaultAxisY()
-    .setTitle("Frequency (Hz)")
-    .setInterval(0, dataSampleSize, false, true);
+  chart.getDefaultAxisY().setTitle("Frequency (Hz)").setInterval({
+    start: 0,
+    end: dataSampleSize,
+    animate: true,
+    stopAxisAfter: false,
+  });
 
   // Create Scrolling Heatmap Grid Series.
   const heatmapSeries = chart
@@ -134,220 +136,161 @@ function Surfaceseries() {
   document.getElementById("target").style.cssText = "height: 500px;";
   const {
     lightningChart,
-    SurfaceSeriesTypes3D,
-    ColorHSV,
-    ColorRGBA,
-    IndividualPointFill,
-    PalettedFill,
-    SolidFill,
     LUT,
-    UIOrigins,
-    UIBackgrounds,
+    PalettedFill,
+    ColorShadingStyles,
+    LegendBoxBuilders,
     UIElementBuilders,
-    UILayoutBuilders,
+    UIOrigins,
+    UIDraggingModes,
     emptyFill,
+    UILayoutBuilders,
+    regularColorSteps,
     Themes,
   } = lcjs;
+  const { createWaterDropDataGenerator } = xydata;
 
-  const chart3D = lightningChart()
+  const COLUMNS = 100;
+  const ROWS = 100;
+
+  const chart = lightningChart()
     .Chart3D({
-      // theme: Themes.darkGold
       container: "target",
     })
-    .setTitle("Simple 3D Surface Grid");
+    .setTitle("Generating example data ...");
   document.getElementById("target").style.boxSizing = "border-box";
 
-  chart3D.getDefaultAxisY().setScrollStrategy(undefined).setInterval(0, 200);
+  Promise.all([
+    // Generate Height map data set.
+    createWaterDropDataGenerator()
+      .setColumns(COLUMNS)
+      .setRows(ROWS)
+      .setWaterDrops([
+        {
+          rowNormalized: 0.5,
+          columnNormalized: 0.5,
+          amplitude: 20,
+        },
+      ])
+      .generate(),
+    // Generate intensity data set.
+    createWaterDropDataGenerator()
+      .setColumns(COLUMNS)
+      .setRows(ROWS)
+      .setVolatility(10)
+      .setWaterDrops([
+        {
+          columnNormalized: 0.22,
+          rowNormalized: 0.2,
+          amplitude: 80,
+        },
+        {
+          columnNormalized: 0.4,
+          rowNormalized: 0.7,
+          amplitude: 70,
+        },
+        {
+          columnNormalized: 0.8,
+          rowNormalized: 0.3,
+          amplitude: 100,
+        },
+      ])
+      .generate(),
+  ]).then((dataSets) => {
+    chart.setTitle("Rendering data ...");
+    requestAnimationFrame(() => {
+      const tStart = performance.now();
+      const heightDataSet = dataSets[0];
+      const intensityDataSet = dataSets[1];
 
-  // Create color Look-Up-Table for dynamic colouring.
-  const palette = new LUT({
-    steps: [
-      { value: 0, color: ColorRGBA(0, 0, 0) },
-      { value: 66, color: ColorRGBA(255, 0, 0) },
-      { value: 133, color: ColorRGBA(0, 255, 0) },
-      { value: 200, color: ColorRGBA(0, 0, 255) },
-    ],
-    interpolate: true,
-  });
+      const surfaceGrid = chart
+        .addSurfaceGridSeries({
+          dataOrder: "rows",
+          columns: COLUMNS,
+          rows: ROWS,
+        })
+        .setIntensityInterpolation("bilinear")
+        .invalidateHeightMap(heightDataSet)
+        .invalidateIntensityValues(intensityDataSet);
 
-  const rows = 25;
-  const columns = rows;
-  const surface = chart3D
-    .addSurfaceSeries({
-      type: SurfaceSeriesTypes3D.Grid,
-      rows,
-      columns,
-      start: { x: 0, z: 0 },
-      end: { x: 1000, z: 1000 },
-      pixelate: true,
-    })
-    // Set Wireframe style.
-    .setWireframeStyle(new SolidFill({ color: ColorRGBA(0, 0, 0, 50) }));
-
-  // Assign a Value to each coordinate of the Grid to be used when colouring by look up value.
-  surface.invalidateValuesOnly((row, column) => row * (200 / rows));
-
-  // Assign a Color to each coordinate of the Grid to be used when colouring by individual color.
-  // Leave some blanks to showcase fall back color.
-  surface.invalidateColorsOnly((row, column) =>
-    Math.random() >= 0.5 ? ColorHSV(Math.random() * 360) : undefined
-  );
-
-  // Animate data point heights by a function of time, row and column: y = f( row, column, t )
-  const y = (row, column) =>
-    100 +
-    4 *
-      Math.sin(Date.now() / 500 + (row / rows) * 5) *
-      (Math.cos((column / columns) * 2.5) * 20);
-  const update = () => {
-    // By passing a function to a invalidation method, the function is called back for each coordinate in the Surface Grid.
-    // With the invalidateYOnly variant, the Number returned by the function will be assigned to that data points Y coordinate.
-    surface.invalidateYOnly(y);
-
-    requestAnimationFrame(update);
-  };
-  update();
-
-  // Animate Camera movement from file.
-  (async () => {
-    const cameraAnimationData = await fetch(
-      document.head.baseURI +
-        "examples/assets/lcjs_example_0905_3dSimpleSurfaceGrid-camera.json"
-    ).then((r) => r.json());
-    if (!cameraAnimationData) {
-      console.log(`No Camera animation data.`);
-      return;
-    }
-    console.log(`Loaded Camera animation data.`);
-    let frame = 0;
-    const nextFrame = () => {
-      if (cameraAnimationEnabledCheckbox.getOn()) {
-        const { cameraLocation } =
-          cameraAnimationData.frames[
-            Math.floor(frame) % cameraAnimationData.frames.length
-          ];
-        chart3D.setCameraLocation(cameraLocation);
-        frame += 1.5;
-      }
-      requestAnimationFrame(nextFrame);
-    };
-    requestAnimationFrame(nextFrame);
-  })();
-
-  // * UI controls *
-  const group = chart3D.addUIElement(
-    UILayoutBuilders.Column.setBackground(UIBackgrounds.Rectangle)
-  );
-  group
-    .setPosition({ x: 0, y: 100 })
-    .setOrigin(UIOrigins.LeftTop)
-    .setMargin(10)
-    .setPadding(4)
-    // Dispose example UI elements automatically if they take too much space. This is to avoid bad UI on mobile / etc. devices.
-    .setAutoDispose({
-      type: "max-height",
-      maxHeight: 0.3,
-    });
-
-  // Add UI controls for changing surface style.
-  const options = [];
-  const addOption = (label, onEnabled, defaultSelection = false) => {
-    const checkBox = group
-      .addElement(UIElementBuilders.CheckBox)
-      .setText(label);
-
-    if (defaultSelection) {
-      checkBox.setOn(true);
-      onEnabled();
-    }
-
-    checkBox.onSwitch((_, state) => {
-      if (state) {
-        onEnabled();
-        checkBox.setMouseInteractions(false);
-        // Set all other check boxes off.
-        options.forEach(
-          (option) =>
-            option.checkBox !== checkBox &&
-            option.checkBox.setOn(false).setMouseInteractions(true)
+      requestAnimationFrame(() => {
+        const tNow = performance.now();
+        const tLoadupMs = tNow - tStart;
+        chart.setTitle(
+          `Intensity Surface Grid ${COLUMNS}x${ROWS} (${(
+            (COLUMNS * ROWS) /
+            10 ** 3
+          ).toFixed(1)} thousand data points) | Ready in ${(
+            tLoadupMs / 1000
+          ).toFixed(2)} s`
         );
-      }
+
+        // Add selector to see difference between Simple and Phong 3D color shading style in Surface grid series.
+        const layout = chart
+          .addUIElement(UILayoutBuilders.Column)
+          .setPosition({ x: 100, y: 100 })
+          .setOrigin(UIOrigins.RightTop)
+          .setMargin({ top: 40, right: 8 })
+          .setDraggingMode(UIDraggingModes.notDraggable);
+
+        const toggleColorShadingStyle = (state) => {
+          surfaceGrid.setColorShadingStyle(
+            state
+              ? new ColorShadingStyles.Phong()
+              : new ColorShadingStyles.Simple()
+          );
+          selectorColorShadingStyle.setText(
+            `Color shading style: ${state ? "Phong" : "Simple"}`
+          );
+        };
+        const selectorColorShadingStyle = layout.addElement(
+          UIElementBuilders.CheckBox
+        );
+        selectorColorShadingStyle.onSwitch((_, state) =>
+          toggleColorShadingStyle(state)
+        );
+        toggleColorShadingStyle(false);
+
+        // Add selector for wireframe only style.
+        const defaultWireframeStyle = surfaceGrid.getWireframeStyle();
+        const toggleWireframeStyle = (state) => {
+          if (state) {
+            surfaceGrid
+              .setFillStyle(emptyFill)
+              .setWireframeStyle(defaultStrokeStyle.setThickness(0.1));
+          } else {
+            const theme = chart.getTheme();
+            surfaceGrid
+              .setFillStyle(
+                new PalettedFill({
+                  lookUpProperty: "value",
+                  lut: new LUT({
+                    interpolate: true,
+                    steps: regularColorSteps(
+                      0,
+                      100,
+                      theme.examples.intensityColorPalette
+                    ),
+                  }),
+                })
+              )
+              .setWireframeStyle(defaultWireframeStyle);
+          }
+          selectorWireframe.setText(
+            state ? `Wireframe only` : "Fill + Wireframe"
+          );
+        };
+        const selectorWireframe = layout.addElement(UIElementBuilders.CheckBox);
+        selectorWireframe.onSwitch((_, state) => toggleWireframeStyle(state));
+        toggleWireframeStyle(false);
+
+        // Add legend.
+        const legend = chart
+          .addLegendBox(LegendBoxBuilders.HorizontalLegendBox)
+          .add(chart);
+      });
     });
-
-    options.push({ checkBox });
-  };
-
-  addOption(
-    "Color look up by Y",
-    () =>
-      // Look up data point color from LUT by Y coordinate
-      surface.setFillStyle(
-        new PalettedFill({ lut: palette, lookUpProperty: "y" })
-      ),
-    true
-  );
-  addOption("Color look up by Value", () =>
-    // Look up data point color from LUT by number Value associated with it (assigned by user)
-    surface.setFillStyle(
-      new PalettedFill({ lut: palette, lookUpProperty: "value" })
-    )
-  );
-  addOption("Individual Color", () =>
-    // Color data points by Colors assigned to each data point.
-    surface.setFillStyle(
-      new IndividualPointFill()
-        // Specify Color to be used for data points that haven't been assigned a Color.
-        .setFallbackColor(ColorRGBA(100, 0, 0))
-    )
-  );
-  addOption("Solid color", () =>
-    // Single solid color.
-    surface.setFillStyle(
-      new SolidFill({ color: ColorHSV(Math.random() * 360) })
-    )
-  );
-
-  // Add UI control for toggling wireframe.
-  const handleWireframeToggled = (state) => {
-    // Set Wireframe style.
-    surface.setWireframeStyle(
-      state ? new SolidFill({ color: ColorRGBA(0, 0, 0, 50) }) : emptyFill
-    );
-    wireframeCheckbox.setText(state ? "Hide wireframe" : "Show wireframe");
-  };
-  const wireframeCheckbox = group.addElement(UIElementBuilders.CheckBox);
-  wireframeCheckbox.onSwitch((_, state) => handleWireframeToggled(state));
-  wireframeCheckbox.setOn(true);
-
-  // Add UI control for toggling camera animation.
-  const handleCameraAnimationToggled = (state) => {
-    cameraAnimationEnabledCheckbox.setText(
-      state ? "Disable camera animation" : "Enable camera animation"
-    );
-    if (cameraAnimationEnabledCheckbox.getOn() !== state) {
-      cameraAnimationEnabledCheckbox.setOn(state);
-    }
-  };
-  const cameraAnimationEnabledCheckbox = group.addElement(
-    UIElementBuilders.CheckBox
-  );
-  cameraAnimationEnabledCheckbox.onSwitch((_, state) =>
-    handleCameraAnimationToggled(state)
-  );
-  handleCameraAnimationToggled(true);
-  chart3D.onBackgroundMouseDrag(() => {
-    handleCameraAnimationToggled(false);
   });
-
-  // Add LegendBox to chart.
-  const legend = chart3D
-    .addLegendBox()
-    // Dispose example UI elements automatically if they take too much space. This is to avoid bad UI on mobile / etc. devices.
-    .setAutoDispose({
-      type: "max-width",
-      maxWidth: 0.3,
-    })
-    .add(chart3D);
 
   document.getElementById("desc").innerHTML =
     '<object  style = "width:80%; height:400px;" data="surfaceseries.html" ></object>';
@@ -384,7 +327,7 @@ function Lineseries(chartcollection) {
   chart
     .getDefaultAxisY()
     .setScrollStrategy(undefined)
-    .setInterval(0, 100)
+    .setInterval({ start: 0, end: 100 })
     .setTitle("Satisfaction %");
 
   // Data for the plotting
