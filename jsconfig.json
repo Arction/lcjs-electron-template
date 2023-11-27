@@ -1,0 +1,11 @@
+// {
+//   "compilerOptions": {
+//     // NOTE: Type checks are disabled for convenience, but type acquisition is still enabled to show available API when writing JavaScript code and referencing LightningChart JS API.
+//     "checkJs": false,
+//     "allowJs": true
+//   },
+//   "exclude": ["node_modules", "out"],
+//   "typeAcquisition": {
+//     "include": ["@arction/lcjs"]
+//   }
+// }

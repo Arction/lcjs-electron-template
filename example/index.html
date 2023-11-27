@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <!--
+      NOTE:
+      "connect-src https://jslicensing.lightningchart.com"
+      is required to allow LCJS license checks through.
+      For information about network requirements, see https://lightningchart.com/js-charts/docs/technical-info/#deployment-and-internet-connection
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self';
+        style-src 'unsafe-inline';
+        connect-src https://jslicensing.lightningchart.com ws://localhost:*
+      "
+    />
+    <title>Hello World!</title>
+    <script src="../node_modules/@arction/lcjs/dist/lcjs.iife.js"></script>
+    <style>
+      body {
+        margin: 0px;
+      }
+      #chart {
+        width: 100vw;
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="chart"></div>
+    <script src="index.js"></script>
+  </body>
+</html>
