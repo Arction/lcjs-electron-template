@@ -1,14 +1,11 @@
 /// <reference path="../node_modules/@arction/lcjs/dist/lcjs.iife.d.ts" />
 
-const { lightningChart, AxisScrollStrategies, AxisTickStrategies, SolidFill } =
-  lcjs;
+const { lightningChart, AxisScrollStrategies, AxisTickStrategies } = lcjs;
 
 const lc = lcjs.lightningChart({
   // Get your license key here: https://lightningchart.com/js-charts/#license-key
   license: undefined,
 });
-
-const a = new SolidFill({ color });
 
 const container = document.getElementById("chart");
 const chart = lc
