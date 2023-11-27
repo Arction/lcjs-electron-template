@@ -10,7 +10,7 @@ This project was initialized according to the [official Electron tutorial](https
 
 It shows how to place LightningChart JS in an Electron renderer, and how to stream real-time data into it from the main process. The result, is a simple chart like below:
 
-![TODO]
+https://github.com/Arction/lcjs-electron-template/assets/55391673/388bd120-17b8-43b4-8762-f4ec61da119c
 
 Here are steps need to run the application locally:
 
