@@ -20,7 +20,7 @@
     "electron": "^27.1.2"
   },
   "dependencies": {
-    "@arction/lcjs": "^5.0.3",
+    "@lightningchart/lcjs": "^5.2.1",
     "electron-squirrel-startup": "^1.0.0",
     "ws": "^8.14.2"
   }

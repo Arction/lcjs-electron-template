@@ -1,4 +1,4 @@
-/// <reference path="../node_modules/@arction/lcjs/dist/lcjs.iife.d.ts" />
+/// <reference path="../node_modules/@lightningchart/lcjs/dist/lcjs.iife.d.ts" />
 
 const { lightningChart, AxisScrollStrategies, AxisTickStrategies } = lcjs;
 

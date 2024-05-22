@@ -27,9 +27,9 @@ The application can also be exported to a distributable application with `npm ru
 Here you will find a description of the steps done to create this template project.
 
 1. Install LightningChart JS from NPM
-   - `npm i @arction/lcjs`
+   - `npm i @lightningchart/lcjs`
 2. Import the library in your Electron renderer HTML file
-   - `<script src="../node_modules/@arction/lcjs/dist/lcjs.iife.js"></script>`
+   - `<script src="../node_modules/@lightningchart/lcjs/dist/lcjs.iife.js"></script>`
 3. Allow connections from renderer to LCJS licensing server
    - Optional, only required for using developer licenses.
    - See example in `example/index.html`
@@ -59,8 +59,8 @@ Some other feasible alternatives to using WebSocket:
 If you notice an error in the example code, please open an issue on [GitHub][3].
 Official [API documentation][4] can be found on [Arction][5] website.
 If the docs and other materials do not solve your problem as well as implementation help is needed, ask on [StackOverflow][6] (tagged lightningchart).
-If you think you found a bug in the LightningChart JavaScript library, please contact support@arction.com.
-Direct developer email support can be purchased through a [Support Plan][7] or by contacting sales@arction.com.
+If you think you found a bug in the LightningChart JavaScript library, please contact support@lightningchart.com.
+Direct developer email support can be purchased through a [Support Plan][7] or by contacting sales@lightningchart.com.
 
 © Arction Ltd 2009-2023. All rights reserved.
 
